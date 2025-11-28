@@ -33,6 +33,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Loyalty", systemImage: "star")
                 }
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
         }
         .task {
             // Request notification permission right after launch.

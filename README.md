@@ -10,7 +10,7 @@ BarberBook is a native SwiftUI + SwiftData demo that helps a shop manage booking
 - **Seed data** loads once on first launch via `SeedDataService` so the UI has meaningful content immediately.
 
 ## Data Model
-- **Barber**: profile + active flag; inverse relationship to bookings for clash detection.
+- **Barber**: profile + active flag; new avatar support so staff can add profile photos from the Settings tab.
 - **Service**: name, duration, price. Duration drives overlap checks and wait-time estimates.
 - **Client**: notes, phone, visit count, relationships to bookings and haircut history.
 - **Booking**: links client, barber, and service; stores start date/time, derived end time, status for loyalty tracking, and a `paymentStatus` for Apple Pay progress.
@@ -43,6 +43,11 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - The **Payments** tab lists quick links for Cash App, PayPal, Venmo, Zelle, or any custom payment URL.
 - Barbers can add/edit links, paste the share URL, and optionally attach a QR code from the camera or photo library for customers to scan.
 - Each link row shows its QR preview (if provided) and an `Open` link that launches the payment page in Safari.
+
+## Settings & Avatars
+- The **Settings** tab lists all barbers with their bios and profile images.
+- Tap `Change Photo` to capture or pick an avatar per barber; images are stored locally via `PhotoStorageService`.
+- Removing a photo clears the stored file to keep disk usage low.
 
 ## Running the App
 1. Open the `BarberBook` folder in Xcode 15 or newer.

@@ -87,14 +87,16 @@ enum PaymentPlatform: String, Codable, CaseIterable, Identifiable {
     var name: String
     var bio: String
     var isActive: Bool
+    var avatarURL: URL?
     @Relationship(deleteRule: .cascade, inverse: \Booking.barber)
     var bookings: [Booking]? = []
 
-    init(id: UUID, name: String, bio: String, isActive: Bool) {
+    init(id: UUID, name: String, bio: String, isActive: Bool, avatarURL: URL? = nil) {
         self.id = id
         self.name = name
         self.bio = bio
         self.isActive = isActive
+        self.avatarURL = avatarURL
     }
 }
 

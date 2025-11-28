@@ -16,7 +16,8 @@ struct PersistenceController {
             Client.self,
             Booking.self,
             WaitlistEntry.self,
-            Haircut.self
+            Haircut.self,
+            PaymentLink.self
         ])
 
         let configuration = ModelConfiguration(schema: schema, isStoredInMemory: false)

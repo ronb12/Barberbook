@@ -51,6 +51,37 @@ enum PaymentStatus: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// Payment providers a barber can store quick links for.
+enum PaymentPlatform: String, Codable, CaseIterable, Identifiable {
+    case cashApp
+    case payPal
+    case venmo
+    case zelle
+    case custom
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .cashApp: return "Cash App"
+        case .payPal: return "PayPal"
+        case .venmo: return "Venmo"
+        case .zelle: return "Zelle"
+        case .custom: return "Custom"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .cashApp: return "dollarsign.square"
+        case .payPal: return "creditcard"
+        case .venmo: return "person.2.square.stack"
+        case .zelle: return "bolt.square"
+        case .custom: return "link"
+        }
+    }
+}
+
 @Model final class Barber {
     @Attribute(.unique) var id: UUID
     var name: String
@@ -179,5 +210,27 @@ enum PaymentStatus: String, Codable, CaseIterable, Identifiable {
         self.date = date
         self.notes = notes
         self.photoURL = photoURL
+    }
+}
+
+@Model final class PaymentLink {
+    @Attribute(.unique) var id: UUID
+    var label: String
+    var platform: PaymentPlatform
+    var urlString: String
+    var qrImageURL: URL?
+    var createdAt: Date
+
+    init(id: UUID, label: String, platform: PaymentPlatform, urlString: String, qrImageURL: URL?, createdAt: Date = .now) {
+        self.id = id
+        self.label = label
+        self.platform = platform
+        self.urlString = urlString
+        self.qrImageURL = qrImageURL
+        self.createdAt = createdAt
+    }
+
+    var url: URL? {
+        URL(string: urlString)
     }
 }

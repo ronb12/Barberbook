@@ -17,6 +17,7 @@ BarberBook is a native SwiftUI + SwiftData demo that helps a shop manage booking
 - **WaitlistEntry**: timestamped queue with status to mark served/cancelled.
 - **Haircut**: timestamped entry with optional photo URL saved locally via `PhotoStorageService`.
 - **PaymentStatus**: lightweight enum (`unpaid`, `pending`, `paid`, `failed`) that keeps the UI in sync with the last Apple Pay attempt per booking.
+- **PaymentLink**: stores reusable Cash App / PayPal / Venmo / custom links plus an optional QR image so barbers can share alternate payment methods.
 
 All models live inside `Models/Entities.swift` and are automatically registered inside `Persistence/PersistenceController.swift`.
 
@@ -37,6 +38,11 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - Each booking row shows payment status and surfaces a native Apple Pay button when the device supports it.
 - On success, the booking flips to `paymentStatus = .paid`; failures stay visible as `.failed` so the barber knows to retry or use another payment method.
 - **Setup:** Apple Pay requires a valid merchant ID, certificate, and entitlement. Update `ApplePayConfiguration.merchantIdentifier` with your ID and enable the Apple Pay capability inside Xcode before distributing the app.
+
+## Alternative Payment Links & QR Codes
+- The **Payments** tab lists quick links for Cash App, PayPal, Venmo, Zelle, or any custom payment URL.
+- Barbers can add/edit links, paste the share URL, and optionally attach a QR code from the camera or photo library for customers to scan.
+- Each link row shows its QR preview (if provided) and an `Open` link that launches the payment page in Safari.
 
 ## Running the App
 1. Open the `BarberBook` folder in Xcode 15 or newer.

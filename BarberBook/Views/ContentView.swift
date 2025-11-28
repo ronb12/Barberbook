@@ -14,6 +14,11 @@ struct ContentView: View {
                     Label("Bookings", systemImage: "calendar")
                 }
 
+            PaymentLinksView()
+                .tabItem {
+                    Label("Payments", systemImage: "qrcode")
+                }
+
             WaitlistView()
                 .tabItem {
                     Label("Waitlist", systemImage: "person.3")
@@ -39,5 +44,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(NotificationManager())
-        .modelContainer(for: [Barber.self, Service.self, Client.self, Booking.self, WaitlistEntry.self, Haircut.self], inMemory: true)
+        .modelContainer(for: [Barber.self, Service.self, Client.self, Booking.self, WaitlistEntry.self, Haircut.self, PaymentLink.self], inMemory: true)
 }

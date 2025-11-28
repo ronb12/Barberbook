@@ -13,9 +13,11 @@ enum SeedDataService {
 
         let context = ModelContext(container)
         let (barbers, services, clients) = makeSeedEntities()
+        let paymentLinks = makeSeedPaymentLinks()
         barbers.forEach { context.insert($0) }
         services.forEach { context.insert($0) }
         clients.forEach { context.insert($0) }
+        paymentLinks.forEach { context.insert($0) }
 
         // Create a couple of bookings so the schedule view is not empty.
         if let defaultBarber = barbers.first, let defaultService = services.first, let firstClient = clients.first {
@@ -58,6 +60,25 @@ enum SeedDataService {
         ]
 
         return (barbers, services, clients)
+    }
+
+    private static func makeSeedPaymentLinks() -> [PaymentLink] {
+        [
+            PaymentLink(
+                id: UUID(),
+                label: "Cash App $BarberBook",
+                platform: .cashApp,
+                urlString: "https://cash.app/$BarberBook",
+                qrImageURL: nil
+            ),
+            PaymentLink(
+                id: UUID(),
+                label: "PayPal.me/BarberBook",
+                platform: .payPal,
+                urlString: "https://paypal.me/BarberBook",
+                qrImageURL: nil
+            )
+        ]
     }
 }
 

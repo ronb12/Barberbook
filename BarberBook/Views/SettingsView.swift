@@ -41,6 +41,15 @@ struct SettingsView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+
+                Section("Legal") {
+                    NavigationLink("Privacy Policy") {
+                        PrivacyPolicyView()
+                    }
+                    NavigationLink("Terms of Service") {
+                        TermsOfServiceView()
+                    }
+                }
             }
             .navigationTitle("Settings")
             .alert("Error", isPresented: $showErrorAlert) {

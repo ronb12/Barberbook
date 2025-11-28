@@ -48,6 +48,7 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - The **Settings** tab lists all barbers with their bios and profile images.
 - Tap `Change Photo` to capture or pick an avatar per barber; images are stored locally via `PhotoStorageService`.
 - Removing a photo clears the stored file to keep disk usage low.
+- Built-in links to the Privacy Policy and Terms of Service keep the shop's legal language accessible inside the app.
 
 ## Running the App
 1. Open the `BarberBook` folder in Xcode 15 or newer.

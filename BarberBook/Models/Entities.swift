@@ -33,6 +33,24 @@ enum WaitlistStatus: String, Codable, CaseIterable, Identifiable {
     var label: String { rawValue.capitalized }
 }
 
+/// Tracks payment progress for a booking.
+enum PaymentStatus: String, Codable, CaseIterable, Identifiable {
+    case unpaid
+    case pending
+    case paid
+    case failed
+
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .unpaid: return "Unpaid"
+        case .pending: return "Pending"
+        case .paid: return "Paid"
+        case .failed: return "Failed"
+        }
+    }
+}
+
 @Model final class Barber {
     @Attribute(.unique) var id: UUID
     var name: String
@@ -99,8 +117,18 @@ enum WaitlistStatus: String, Codable, CaseIterable, Identifiable {
     var date: Date
     var time: String
     var status: BookingStatus
+    var paymentStatus: PaymentStatus
 
-    init(id: UUID, client: Client?, barber: Barber?, service: Service?, date: Date, time: String, status: BookingStatus) {
+    init(
+        id: UUID,
+        client: Client?,
+        barber: Barber?,
+        service: Service?,
+        date: Date,
+        time: String,
+        status: BookingStatus,
+        paymentStatus: PaymentStatus = .unpaid
+    ) {
         self.id = id
         self.client = client
         self.barber = barber
@@ -108,6 +136,7 @@ enum WaitlistStatus: String, Codable, CaseIterable, Identifiable {
         self.date = date
         self.time = time
         self.status = status
+        self.paymentStatus = paymentStatus
     }
 
     /// Combines the date with the service duration to determine an end date for overlap checks.

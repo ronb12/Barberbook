@@ -27,7 +27,8 @@ enum SeedDataService {
                 service: defaultService,
                 date: today.addingTimeInterval(3600),
                 time: DateFormatter.shortTime.string(from: today.addingTimeInterval(3600)),
-                status: .scheduled
+                status: .scheduled,
+                paymentStatus: .unpaid
             )
             context.insert(booking)
         }

@@ -9,11 +9,15 @@ import SwiftUI
 final class BookingViewModel: ObservableObject {
     @Published var latestError: String?
     @Published var showOverlapAlert = false
+    @Published var showPaymentError = false
+    @Published var paymentErrorMessage: String?
 
     private let notificationManager: NotificationManager
+    private let applePayService: ApplePayService
 
-    init(notificationManager: NotificationManager) {
+    init(notificationManager: NotificationManager, applePayService: ApplePayService = .shared) {
         self.notificationManager = notificationManager
+        self.applePayService = applePayService
     }
 
     func upcomingBookings(using context: ModelContext) -> [Booking] {
@@ -80,6 +84,46 @@ final class BookingViewModel: ObservableObject {
         let endDate = startDate.addingTimeInterval(TimeInterval(durationMinutes * 60))
         return existing.allSatisfy { booking in
             booking.endDate <= startDate || booking.date >= endDate
+        }
+    }
+
+    var canUseApplePay: Bool {
+        applePayService.isApplePayAvailable
+    }
+
+    func payWithApplePay(for booking: Booking, context: ModelContext) {
+        guard booking.paymentStatus != .paid else { return }
+        guard applePayService.isApplePayAvailable else {
+            paymentErrorMessage = \"Apple Pay is not available on this device.\"
+            showPaymentError = true
+            return
+        }
+
+        booking.paymentStatus = .pending
+
+        applePayService.presentPayment(for: booking) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success:
+                booking.paymentStatus = .paid
+                do {
+                    try context.save()
+                } catch {
+                    self.paymentErrorMessage = error.localizedDescription
+                    self.showPaymentError = true
+                }
+            case .failure(let error):
+                booking.paymentStatus = .failed
+                do {
+                    try context.save()
+                } catch {
+                    self.paymentErrorMessage = "Payment failed and we could not persist the change: \(error.localizedDescription)"
+                    self.showPaymentError = true
+                    return
+                }
+                self.paymentErrorMessage = error.localizedDescription
+                self.showPaymentError = true
+            }
         }
     }
 }

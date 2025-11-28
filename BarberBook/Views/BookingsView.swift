@@ -29,7 +29,13 @@ struct BookingsView: View {
                     )
                 } else {
                     ForEach(upcomingBookings) { booking in
-                        BookingRow(booking: booking) {
+                        BookingRow(
+                            booking: booking,
+                            applePayAvailable: viewModel.canUseApplePay,
+                            applePayAction: {
+                                viewModel.payWithApplePay(for: booking, context: context)
+                            }
+                        ) {
                             viewModel.mark(booking, as: .completed, context: context)
                         } cancelAction: {
                             viewModel.mark(booking, as: .cancelled, context: context)
@@ -56,12 +62,19 @@ struct BookingsView: View {
             .sheet(isPresented: $presentingForm) {
                 BookingFormView(viewModel: viewModel)
             }
+            .alert("Payment issue", isPresented: $viewModel.showPaymentError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.paymentErrorMessage ?? "Unable to complete payment.")
+            }
         }
     }
 }
 
 private struct BookingRow: View {
     let booking: Booking
+    let applePayAvailable: Bool
+    let applePayAction: () -> Void
     let completeAction: () -> Void
     let cancelAction: () -> Void
 
@@ -89,6 +102,25 @@ private struct BookingRow: View {
                 .font(.body)
 
             HStack {
+                Text("Payment: \(booking.paymentStatus.label)")
+                    .font(.caption)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(paymentStatusColor.opacity(0.2))
+                    .clipShape(Capsule())
+                Spacer()
+            }
+
+            if booking.paymentStatus != .paid {
+                ApplePayButtonView {
+                    applePayAction()
+                }
+                .frame(height: 44)
+                .disabled(!applePayAvailable)
+                .opacity(applePayAvailable ? 1 : 0.4)
+            }
+
+            HStack {
                 Button("Completed", action: completeAction)
                     .buttonStyle(.borderedProminent)
                 Button("Cancel", role: .destructive, action: cancelAction)
@@ -104,6 +136,15 @@ private struct BookingRow: View {
         case .completed: return .green
         case .cancelled: return .red
         case .noShow: return .orange
+        }
+    }
+
+    private var paymentStatusColor: Color {
+        switch booking.paymentStatus {
+        case .unpaid: return .orange
+        case .pending: return .blue
+        case .paid: return .green
+        case .failed: return .red
         }
     }
 }

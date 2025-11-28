@@ -10,12 +10,14 @@ BarberBook is a native SwiftUI + SwiftData demo that helps a shop manage booking
 - **Seed data** loads once on first launch via `SeedDataService` so the UI has meaningful content immediately.
 
 ## Data Model
-- **Barber**: profile + active flag; inverse relationship to bookings for clash detection.
-- **Service**: name, duration, price. Duration drives overlap checks and wait-time estimates.
+- **Barber**: profile + active flag; new avatar support so staff can add profile photos from the Settings tab.
+- **Service**: name, duration, price. Duration drives overlap checks and wait-time estimates and can be fully managed from the in-app Services tab.
 - **Client**: notes, phone, visit count, relationships to bookings and haircut history.
-- **Booking**: links client, barber, and service; stores start date/time, derived end time, and status for loyalty tracking.
+- **Booking**: links client, barber, and service; stores start date/time, derived end time, status for loyalty tracking, and a `paymentStatus` for Apple Pay progress.
 - **WaitlistEntry**: timestamped queue with status to mark served/cancelled.
 - **Haircut**: timestamped entry with optional photo URL saved locally via `PhotoStorageService`.
+- **PaymentStatus**: lightweight enum (`unpaid`, `pending`, `paid`, `failed`) that keeps the UI in sync with the last Apple Pay attempt per booking.
+- **PaymentLink**: stores reusable Cash App / PayPal / Venmo / custom links plus an optional QR image so barbers can share alternate payment methods.
 
 All models live inside `Models/Entities.swift` and are automatically registered inside `Persistence/PersistenceController.swift`.
 
@@ -30,6 +32,32 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - Permission is requested on first launch (and refreshed when the scene becomes active).
 - Booking creation triggers `NotificationManager.scheduleReminder`, which schedules a local notification 1 hour before the start.
 - Cancelling/finishing bookings removes pending reminders.
+
+## Payments (Apple Pay)
+- `Payments/ApplePayService` wraps `PKPaymentAuthorizationController` so any booking can be paid directly from the bookings tab.
+- Each booking row shows payment status and surfaces a native Apple Pay button when the device supports it.
+- On success, the booking flips to `paymentStatus = .paid`; failures stay visible as `.failed` so the barber knows to retry or use another payment method.
+- **Setup:** Apple Pay requires a valid merchant ID, certificate, and entitlement. Update `ApplePayConfiguration.merchantIdentifier` with your ID and enable the Apple Pay capability inside Xcode before distributing the app.
+
+## Analytics Dashboard
+- The **Analytics** tab compiles SwiftData records into handy KPIs—total bookings, upcoming/completed counts, projected revenue from completed services, top-performing services, and leading loyalty clients.
+- Metrics refresh automatically on view load and via pull-to-refresh.
+
+## Services Management
+- The **Services** tab lists all offerings from SwiftData with add/edit/delete controls, so barbers can adjust pricing or durations without touching code.
+- Duration steppers and price sliders ensure consistent values, and deletion automatically updates the SwiftData store.
+
+## Alternative Payment Links & QR Codes
+- The **Payments** tab lists quick links for Cash App, PayPal, Venmo, Zelle, or any custom payment URL.
+- Barbers can add/edit links, paste the share URL, and optionally attach a QR code from the camera or photo library for customers to scan.
+- Each link row shows its QR preview (if provided) and an `Open` link that launches the payment page in Safari.
+
+## Settings & Avatars
+- The **Settings** tab lists all barbers with their bios and profile images.
+- Tap `Change Photo` to capture or pick an avatar per barber; images are stored locally via `PhotoStorageService`.
+- Removing a photo clears the stored file to keep disk usage low.
+- Built-in links to the Privacy Policy and Terms of Service keep the shop's legal language accessible inside the app.
+- The repository also ships with a GitHub Pages–ready [Privacy Policy](docs/privacy-policy.md) so you can publish it externally (Settings ➜ Pages ➜ Source: `docs/`).
 
 ## Running the App
 1. Open the `BarberBook` folder in Xcode 15 or newer.

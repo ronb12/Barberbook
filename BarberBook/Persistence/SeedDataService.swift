@@ -48,7 +48,12 @@ enum SeedDataService {
         let services = [
             Service(id: UUID(), name: "Classic Cut", durationMinutes: 30, price: 30),
             Service(id: UUID(), name: "Skin Fade", durationMinutes: 45, price: 45),
-            Service(id: UUID(), name: "Beard Trim", durationMinutes: 15, price: 20)
+            Service(id: UUID(), name: "Beard Trim", durationMinutes: 15, price: 20),
+            Service(id: UUID(), name: "Buzz Cut", durationMinutes: 20, price: 25),
+            Service(id: UUID(), name: "Taper Fade", durationMinutes: 40, price: 40),
+            Service(id: UUID(), name: "Kid's Cut", durationMinutes: 35, price: 28),
+            Service(id: UUID(), name: "Scissor Cut", durationMinutes: 45, price: 50),
+            Service(id: UUID(), name: "Hot Towel Shave", durationMinutes: 30, price: 35)
         ]
 
         let clients = [

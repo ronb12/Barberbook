@@ -14,6 +14,11 @@ struct ContentView: View {
                     Label("Bookings", systemImage: "calendar")
                 }
 
+            AnalyticsView()
+                .tabItem {
+                    Label("Analytics", systemImage: "chart.bar")
+                }
+
             ServicesView()
                 .tabItem {
                     Label("Services", systemImage: "scissors")

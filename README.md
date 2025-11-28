@@ -39,6 +39,10 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - On success, the booking flips to `paymentStatus = .paid`; failures stay visible as `.failed` so the barber knows to retry or use another payment method.
 - **Setup:** Apple Pay requires a valid merchant ID, certificate, and entitlement. Update `ApplePayConfiguration.merchantIdentifier` with your ID and enable the Apple Pay capability inside Xcode before distributing the app.
 
+## Analytics Dashboard
+- The **Analytics** tab compiles SwiftData records into handy KPIs—total bookings, upcoming/completed counts, projected revenue from completed services, top-performing services, and leading loyalty clients.
+- Metrics refresh automatically on view load and via pull-to-refresh.
+
 ## Services Management
 - The **Services** tab lists all offerings from SwiftData with add/edit/delete controls, so barbers can adjust pricing or durations without touching code.
 - Duration steppers and price sliders ensure consistent values, and deletion automatically updates the SwiftData store.

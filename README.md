@@ -8,6 +8,7 @@ BarberBook is a native SwiftUI + SwiftData demo that helps a shop manage booking
 - **MVVM-inspired layers**: lightweight `ViewModel` types encapsulate business logic such as clash detection, wait-time math, and haircut storage.
 - **Local notifications** handled by `NotificationManager`, which schedules one-hour reminders for upcoming bookings after permission is granted.
 - **Seed data** loads once on first launch via `SeedDataService` so the UI has meaningful content immediately.
+- **Sign in with Apple gating** so only authorized staff can open the schedule on each device.
 
 ## Data Model
 - **Barber**: profile + active flag; new avatar support so staff can add profile photos from the Settings tab.
@@ -32,6 +33,11 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - Permission is requested on first launch (and refreshed when the scene becomes active).
 - Booking creation triggers `NotificationManager.scheduleReminder`, which schedules a local notification 1 hour before the start.
 - Cancelling/finishing bookings removes pending reminders.
+
+## Sign in with Apple
+- Users must authenticate with their Apple ID the first time they open the app on a device; the app stores the Apple user ID locally to gate access.
+- The onboarding screen uses the native `SignInWithAppleButton` and explains why authentication is needed.
+- The Settings tab shows who is signed in and offers a Sign Out option.
 
 ## Payments (Apple Pay)
 - `Payments/ApplePayService` wraps `PKPaymentAuthorizationController` so any booking can be paid directly from the bookings tab.

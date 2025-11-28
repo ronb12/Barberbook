@@ -9,6 +9,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor(\.name)]) private var barbers: [Barber]
     @StateObject private var viewModel = SettingsViewModel()
+    @EnvironmentObject private var authViewModel: AuthViewModel
 
     @State private var selectedBarber: Barber?
     @State private var showSourceDialog = false
@@ -19,6 +20,18 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section("Account") {
+                    if let name = authViewModel.displayName, name.isEmpty == false {
+                        LabeledContent("Signed in as", value: name)
+                    } else {
+                        Text("Signed in with Apple")
+                            .foregroundStyle(.secondary)
+                    }
+                    Button("Sign Out", role: .destructive) {
+                        authViewModel.signOut()
+                    }
+                }
+
                 Section("Barber Profiles") {
                     if barbers.isEmpty {
                         ContentUnavailableView("No barbers", systemImage: "person", description: Text("Seed data adds two barbers. Add more via SwiftData."))

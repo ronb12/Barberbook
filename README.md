@@ -11,7 +11,7 @@ BarberBook is a native SwiftUI + SwiftData demo that helps a shop manage booking
 
 ## Data Model
 - **Barber**: profile + active flag; new avatar support so staff can add profile photos from the Settings tab.
-- **Service**: name, duration, price. Duration drives overlap checks and wait-time estimates.
+- **Service**: name, duration, price. Duration drives overlap checks and wait-time estimates and can be fully managed from the in-app Services tab.
 - **Client**: notes, phone, visit count, relationships to bookings and haircut history.
 - **Booking**: links client, barber, and service; stores start date/time, derived end time, status for loyalty tracking, and a `paymentStatus` for Apple Pay progress.
 - **WaitlistEntry**: timestamped queue with status to mark served/cancelled.
@@ -38,6 +38,10 @@ The app currently ships with on-device storage only. To enable iCloud syncing:
 - Each booking row shows payment status and surfaces a native Apple Pay button when the device supports it.
 - On success, the booking flips to `paymentStatus = .paid`; failures stay visible as `.failed` so the barber knows to retry or use another payment method.
 - **Setup:** Apple Pay requires a valid merchant ID, certificate, and entitlement. Update `ApplePayConfiguration.merchantIdentifier` with your ID and enable the Apple Pay capability inside Xcode before distributing the app.
+
+## Services Management
+- The **Services** tab lists all offerings from SwiftData with add/edit/delete controls, so barbers can adjust pricing or durations without touching code.
+- Duration steppers and price sliders ensure consistent values, and deletion automatically updates the SwiftData store.
 
 ## Alternative Payment Links & QR Codes
 - The **Payments** tab lists quick links for Cash App, PayPal, Venmo, Zelle, or any custom payment URL.
